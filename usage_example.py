@@ -49,7 +49,7 @@ class ConsumerProducer:
 
 
 async def main():
-    await run_server('localhost',  8080, ConsumerProducer())
+    await run_server('localhost', 8080, ConsumerProducer())
 
 if __name__ == '__main__':
     asyncio.run(main())

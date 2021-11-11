@@ -36,3 +36,11 @@ def test_get_socket(socket_factory):
     socket = socket_factory()
     user_id = manager.register(socket)
     assert manager.get_socket(user_id) == socket
+
+
+def test_unregister_socket(socket_factory):
+    manager = SocketManager()
+    socket = socket_factory()
+    user_id = manager.register(socket)
+    manager.unregister(user_id)
+    assert manager.num_clients == 0

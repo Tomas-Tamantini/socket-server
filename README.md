@@ -1,2 +1,2 @@
 # socket-server
-A simple python socket server
+A (hopefully) simple python socket server

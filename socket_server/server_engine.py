@@ -48,3 +48,9 @@ class ServerEngine:
         if self.__consumer is not None:
             await self.__consumer.handle_client_disconnected(client_id)
         self.__socket_manager.unregister(client_id)
+
+    async def __send_message(self, socket, message: str) -> None:
+        try:
+            await socket.send(message)
+        except DISCONNECT_EXCEPTIONS:
+            await self.__unregister_socket(socket)

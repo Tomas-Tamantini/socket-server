@@ -1,4 +1,4 @@
-from typing import Hashable
+from typing import Hashable, Optional
 
 
 class SocketManager:
@@ -29,6 +29,9 @@ class SocketManager:
 
     def get_socket(self, client_id: Hashable):
         return self.__ids_to_sockets.get(client_id)
+
+    def get_client_id(self, socket) -> Optional[Hashable]:
+        return self.__sockets_to_ids.get(socket)
 
     # Exceptions:
 

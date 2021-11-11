@@ -20,3 +20,19 @@ def test_same_socket_cannot_register_twice(socket_factory):
     manager.register(socket)
     with pytest.raises(SocketManager.SocketAlreadyRegisteredError):
         manager.register(socket)
+
+
+def test_ids_should_be_unique(socket_factory):
+    manager = SocketManager()
+    socket_a = socket_factory()
+    id_a = manager.register(socket_a)
+    socket_b = socket_factory()
+    id_b = manager.register(socket_b)
+    assert id_a != id_b
+
+
+def test_get_socket(socket_factory):
+    manager = SocketManager()
+    socket = socket_factory()
+    user_id = manager.register(socket)
+    assert manager.get_socket(user_id) == socket

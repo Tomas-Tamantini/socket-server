@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from .consumer import Consumer
@@ -37,6 +38,7 @@ class ServerEngine:
         client_id = self.__socket_manager.get_client_id(socket)
         if client_id is None:
             client_id = self.__socket_manager.register(socket)
+            logging.info(f'New client registered with ID: {client_id}')
             if self.__consumer is not None:
                 await self.__consumer.handle_client_connected(client_id)
 
@@ -50,6 +52,7 @@ class ServerEngine:
         if self.__consumer is not None:
             await self.__consumer.handle_client_disconnected(client_id)
         self.__socket_manager.unregister(client_id)
+        logging.info(f'Client with ID: {client_id} disconnected')
 
     async def __send_message(self, socket, message: str) -> None:
         try:

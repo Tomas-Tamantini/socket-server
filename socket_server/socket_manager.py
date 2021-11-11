@@ -21,6 +21,12 @@ class SocketManager:
         self.__current_id += 1
         return new_id
 
+    def unregister(self, client_id: Hashable):
+        if client_id not in self.__ids_to_sockets:
+            raise self.SocketNotRegisteredError(client_id)
+        socket = self.__ids_to_sockets.pop(client_id)
+        del self.__sockets_to_ids[socket]
+
     def get_socket(self, client_id: Hashable):
         return self.__ids_to_sockets.get(client_id)
 
@@ -29,4 +35,9 @@ class SocketManager:
     class SocketAlreadyRegisteredError(Exception):
         def __init__(self, socket, socket_id) -> None:
             msg = f"Socket with id {socket_id} is already registered - {str(socket)}"
+            super().__init__(msg)
+
+    class SocketNotRegisteredError(Exception):
+        def __init__(self, socket_id) -> None:
+            msg = f"Socket with id {socket_id} is not registered"
             super().__init__(msg)

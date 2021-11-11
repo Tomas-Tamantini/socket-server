@@ -1,3 +1,6 @@
+from typing import Hashable
+
+
 class SocketManager:
     def __init__(self) -> None:
         self.__current_id = 0
@@ -8,12 +11,18 @@ class SocketManager:
     def num_clients(self) -> int:
         return len(self.__sockets_to_ids)
 
-    def register(self, socket) -> None:
+    def register(self, socket) -> Hashable:
         if socket in self.__sockets_to_ids:
-            raise self.SocketAlreadyRegisteredError(socket, self.__sockets_to_ids[socket])
-        self.__sockets_to_ids[socket] = self.__current_id
-        self.__ids_to_sockets[self.__current_id] = socket
+            raise self.SocketAlreadyRegisteredError(
+                socket, self.__sockets_to_ids[socket])
+        new_id = self.__current_id
+        self.__sockets_to_ids[socket] = new_id
+        self.__ids_to_sockets[new_id] = socket
         self.__current_id += 1
+        return new_id
+
+    def get_socket(self, client_id: Hashable):
+        return self.__ids_to_sockets.get(client_id)
 
     # Exceptions:
 

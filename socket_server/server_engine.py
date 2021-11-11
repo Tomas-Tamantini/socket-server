@@ -26,6 +26,8 @@ class ServerEngine:
             await self.__unregister_socket(socket)
 
     async def run_producer(self):
+        if self.__producer is None:
+            return
         async for user_id, message in self.__producer.notifications:
             socket = self.__socket_manager.get_socket(user_id)
             if socket is not None:

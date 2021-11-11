@@ -32,7 +32,7 @@ def _initialize_server_engine(consumer: Optional[Consumer], producer: Optional[P
 
 async def _gather_tasks(socket, path, server_engine: ServerEngine):
     consumer_task = asyncio.ensure_future(server_engine.run_consumer(socket))
-    producer_task = asyncio.ensure_future(server_engine.run_producer(socket))
+    producer_task = asyncio.ensure_future(server_engine.run_producer())
     _, pending = await asyncio.wait([consumer_task, producer_task], return_when=asyncio.FIRST_COMPLETED)
     for task in pending:
         task.cancel()

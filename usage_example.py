@@ -40,10 +40,12 @@ class ConsumerProducer:
     async def notifications(self) -> Generator[Tuple[Hashable, str], None, None]:
         """Send 'Hello!' to some random client every second"""
         while True:
-            if len(self.__clients) > 0:
-                user_id = choice(list(self.__clients))
-                yield (user_id, 'Hello!')
             await asyncio.sleep(1)
+            if len(self.__clients) == 0:
+                continue
+            user_id = choice(list(self.__clients))
+            print(f'Sending "hello" to client {user_id}')
+            yield (user_id, 'Hello!')
 
 
 async def main():

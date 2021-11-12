@@ -29,8 +29,8 @@ class ServerEngine:
     async def run_producer(self):
         if self.__producer is None:
             return
-        async for user_id, message in self.__producer.notifications:
-            socket = self.__socket_manager.get_socket(user_id)
+        async for client_id, message in self.__producer.notifications:
+            socket = self.__socket_manager.get_socket(client_id)
             if socket is not None:
                 await self.__send_message(socket, message)
 

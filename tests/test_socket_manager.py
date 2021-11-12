@@ -34,20 +34,20 @@ def test_ids_should_be_unique(socket_factory):
 def test_get_socket(socket_factory):
     manager = SocketManager()
     socket = socket_factory()
-    user_id = manager.register(socket)
-    assert manager.get_socket(user_id) == socket
+    client_id = manager.register(socket)
+    assert manager.get_socket(client_id) == socket
 
 
 def test_get_client_id(socket_factory):
     manager = SocketManager()
     socket = socket_factory()
-    user_id = manager.register(socket)
-    assert manager.get_client_id(socket) == user_id
+    client_id = manager.register(socket)
+    assert manager.get_client_id(socket) == client_id
 
 
 def test_unregister_socket(socket_factory):
     manager = SocketManager()
     socket = socket_factory()
-    user_id = manager.register(socket)
-    manager.unregister(user_id)
+    client_id = manager.register(socket)
+    manager.unregister(client_id)
     assert manager.num_clients == 0

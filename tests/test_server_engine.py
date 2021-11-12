@@ -12,10 +12,10 @@ class MockConsumer:
     async def handle_message(self, _: Hashable, message: str) -> None:
         self.received_requests.append(message)
 
-    async def handle_client_connected(self, user_id: Hashable) -> None:
+    async def handle_client_connected(self, _: Hashable) -> None:
         pass
 
-    async def handle_client_disconnected(self, user_id: Hashable) -> None:
+    async def handle_client_disconnected(self, _: Hashable) -> None:
         pass
 
 
@@ -44,11 +44,11 @@ async def test_messages_are_passed_to_consumer(socket_factory):
 async def test_notifications_are_sent_to_proper_sockets(socket_factory):
     socket_manager = SocketManager()
     socket_a = socket_factory()
-    user_a = socket_manager.register(socket_a)
+    client_a = socket_manager.register(socket_a)
     socket_b = socket_factory()
-    user_b = socket_manager.register(socket_b)
-    notifications = [(user_a, 'first_msg_to_a'),
-                     (user_b, 'first_msg_to_b'), (user_a, 'second_msg_to_a')]
+    client_b = socket_manager.register(socket_b)
+    notifications = [(client_a, 'first_msg_to_a'),
+                     (client_b, 'first_msg_to_b'), (client_a, 'second_msg_to_a')]
     producer = MockProducer(notifications)
     server = ServerEngine(socket_manager, producer=producer)
     await server.run_producer()

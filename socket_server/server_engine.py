@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Hashable, Optional
 
 from .consumer import Consumer
 from .producer import Producer
@@ -18,6 +18,7 @@ class ServerEngine:
         self.__producer = producer
 
     async def run_consumer(self, socket):
+        await self.__try_register_new_socket(socket)
         try:
             async for request in socket:
                 await self.__handle_request(socket, request)
@@ -35,12 +36,7 @@ class ServerEngine:
                 await self.__send_message(socket, message)
 
     async def __handle_request(self, socket, request: str) -> None:
-        client_id = self.__socket_manager.get_client_id(socket)
-        if client_id is None:
-            client_id = self.__socket_manager.register(socket)
-            logging.info(f'New client registered with ID: {client_id}')
-            if self.__consumer is not None:
-                await self.__consumer.handle_client_connected(client_id)
+        client_id = await self.__try_register_new_socket(socket)
 
         if self.__consumer is not None:
             await self.__consumer.handle_message(client_id, request)
@@ -59,3 +55,12 @@ class ServerEngine:
             await socket.send(message)
         except DISCONNECT_EXCEPTIONS:
             await self.__unregister_socket(socket)
+
+    async def __try_register_new_socket(self, socket) -> Hashable:
+        client_id = self.__socket_manager.get_client_id(socket)
+        if client_id is None:
+            client_id = self.__socket_manager.register(socket)
+            logging.info(f'New client registered with ID: {client_id}')
+            if self.__consumer is not None:
+                await self.__consumer.handle_client_connected(client_id)
+        return client_id

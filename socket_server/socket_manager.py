@@ -23,7 +23,7 @@ class SocketManager:
 
     def unregister(self, client_id: Hashable):
         if client_id not in self.__ids_to_sockets:
-            raise self.SocketNotRegisteredError(client_id)
+            return
         socket = self.__ids_to_sockets.pop(client_id)
         del self.__sockets_to_ids[socket]
 

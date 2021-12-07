@@ -51,3 +51,8 @@ def test_unregister_socket(socket_factory):
     client_id = manager.register(socket)
     manager.unregister(client_id)
     assert manager.num_clients == 0
+
+def test_unregister_socket_not_registered_does_nothing(socket_factory):
+    manager = SocketManager()
+    socket = socket_factory()
+    manager.unregister(socket)
